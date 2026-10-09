@@ -9,12 +9,16 @@ import EnquiryForm from './components/EnquiryForm';
 import Footer from './components/Footer';
 import FloatingCTA from './components/FloatingCTA';
 import ScrollToTop from './components/ScrollToTop';
+import SplashScreen from './components/SplashScreen';
 
 // Admin Components
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 
 function App() {
+  // Splash screen state (shows once on initial load)
+  const [showSplash, setShowSplash] = useState(true);
+
   // Bilingual state: default selected on Hindi ('hi')
   const [lang, setLang] = useState('hi');
   const [currency, setCurrency] = useState('INR');
@@ -117,6 +121,11 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-orange-500 selection:text-white pb-16 md:pb-0">
       
+      {/* 🌟 Divine Premium Welcome Splash Screen */}
+      {showSplash && (
+        <SplashScreen onFinish={() => setShowSplash(false)} />
+      )}
+
       {/* 1. Header Navigation with Top Shree Ganeshay Namah Mantra Bar */}
       <Navbar
         lang={lang}
