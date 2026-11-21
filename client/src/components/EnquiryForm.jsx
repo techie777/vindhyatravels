@@ -4,15 +4,25 @@ import { Send, PhoneCall, Mail, MapPin, Sparkles, CheckCircle2, MessageCircle } 
 import { submitEnquiry } from '../services/api';
 import { translations } from '../utils/translations';
 
+// Helper to get local present day in YYYY-MM-DD
+const getTodayDateStr = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const EnquiryForm = ({ lang, prefilledData }) => {
   const t = translations[lang] || translations.hi;
   const isHindi = lang === 'hi';
+  const todayStr = getTodayDateStr();
 
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     destination: 'उज्जैन महाकाल (Ujjain Mahakal)',
-    travelDate: ''
+    travelDate: todayStr
   });
 
   const [statusMsg, setStatusMsg] = useState(null);
@@ -23,10 +33,10 @@ const EnquiryForm = ({ lang, prefilledData }) => {
       setFormData((prev) => ({
         ...prev,
         destination: prefilledData.destination || prev.destination,
-        travelDate: prefilledData.date || prev.travelDate
+        travelDate: prefilledData.date || prev.travelDate || todayStr
       }));
     }
-  }, [prefilledData]);
+  }, [prefilledData, todayStr]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,6 +74,15 @@ const EnquiryForm = ({ lang, prefilledData }) => {
       return;
     }
 
+    if (formData.travelDate && formData.travelDate < todayStr) {
+      setStatusMsg({
+        type: 'error',
+        text: isHindi ? 'कृपया आज या भविष्य की तारीख चुनें (पुरानी तारीख अमान्य है)' : 'Please select today or a future date (past dates cannot be selected)'
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
       // 1. Save lead in backend DB
       await submitEnquiry({
@@ -94,7 +113,7 @@ const EnquiryForm = ({ lang, prefilledData }) => {
         name: '',
         phone: '',
         destination: 'उज्जैन महाकाल (Ujjain Mahakal)',
-        travelDate: ''
+        travelDate: todayStr
       });
     } catch (err) {
       // Still open WhatsApp even if local server has glitch
@@ -155,15 +174,17 @@ const EnquiryForm = ({ lang, prefilledData }) => {
             
             {/* 1. Name */}
             <div>
-              <label className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
+              <label htmlFor="enquiry-form-name" className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
                 {isHindi ? 'आपका नाम' : 'Your Name'} *
               </label>
               <input
+                id="enquiry-form-name"
                 type="text"
                 name="name"
                 required
                 autoComplete="name"
                 maxLength={80}
+                aria-label={isHindi ? 'आपका नाम' : 'Your Name'}
                 placeholder={isHindi ? 'उदा. राम शर्मा' : 'e.g. Rahul Sharma'}
                 value={formData.name}
                 onChange={handleChange}
@@ -173,16 +194,18 @@ const EnquiryForm = ({ lang, prefilledData }) => {
 
             {/* 2. Mobile Phone */}
             <div>
-              <label className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
+              <label htmlFor="enquiry-form-phone" className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
                 {isHindi ? 'मोबाइल नंबर' : 'Mobile Number'} *
               </label>
               <input
+                id="enquiry-form-phone"
                 type="tel"
                 name="phone"
                 required
                 inputMode="numeric"
                 autoComplete="tel"
                 maxLength={10}
+                aria-label={isHindi ? 'मोबाइल नंबर' : 'Mobile Number'}
                 placeholder="9685232340"
                 value={formData.phone}
                 onChange={handleChange}
@@ -192,13 +215,15 @@ const EnquiryForm = ({ lang, prefilledData }) => {
 
             {/* 3. Destination */}
             <div>
-              <label className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
+              <label htmlFor="enquiry-form-destination" className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
                 {isHindi ? 'कहाँ जाना है?' : 'Where do you want to go?'} *
               </label>
               <input
+                id="enquiry-form-destination"
                 type="text"
                 name="destination"
                 required
+                aria-label={isHindi ? 'कहाँ जाना है' : 'Where do you want to go'}
                 placeholder={isHindi ? 'उदा. उज्जैन, ओंकारेश्वर, मांडू...' : 'e.g. Ujjain, Omkareshwar, Mandu...'}
                 value={formData.destination}
                 onChange={handleChange}
@@ -208,13 +233,16 @@ const EnquiryForm = ({ lang, prefilledData }) => {
 
             {/* 4. Travel Date */}
             <div>
-              <label className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
+              <label htmlFor="enquiry-form-date" className="block text-xs sm:text-sm text-slate-700 font-bold mb-1.5">
                 {isHindi ? 'तारीख' : 'Travel Date'} *
               </label>
               <input
+                id="enquiry-form-date"
                 type="date"
                 name="travelDate"
                 required
+                aria-label={isHindi ? 'यात्रा की तारीख' : 'Travel Date'}
+                min={todayStr}
                 value={formData.travelDate}
                 onChange={handleChange}
                 className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 font-bold focus:outline-none focus:border-orange-500 shadow-sm cursor-pointer"
@@ -243,7 +271,7 @@ const EnquiryForm = ({ lang, prefilledData }) => {
             </span>
             <span className="flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-              <a href="mailto:booking@vindhyatravels.com" className="hover:text-sky-600 font-semibold">booking@vindhyatravels.com</a>
+              <a href="mailto:booking@vindhyatravels.com" className="hover:text-sky-700 font-semibold text-slate-700">booking@vindhyatravels.com</a>
             </span>
           </div>
 

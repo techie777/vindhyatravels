@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
 
 // Sparkling 4-point Star Component
@@ -8,7 +8,7 @@ const SparkleStar = ({ size = 14, className = 'text-yellow-200', delay = false }
     height={size}
     viewBox="0 0 24 24"
     fill="currentColor"
-    className={`shrink-0 pointer-events-none drop-shadow-[0_0_6px_rgba(255,255,255,0.95)] ${
+    className={`shrink-0 pointer-events-none ${
       delay ? 'animate-sparkle-2' : 'animate-sparkle-1'
     } ${className}`}
     xmlns="http://www.w3.org/2000/svg"
@@ -19,6 +19,17 @@ const SparkleStar = ({ size = 14, className = 'text-yellow-200', delay = false }
 
 const FloatingCTA = ({ lang }) => {
   const isHindi = lang === 'hi';
+  const [showDesktopCTA, setShowDesktopCTA] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Appear smoothly after scrolling down past 250px
+      setShowDesktopCTA(window.scrollY > 250);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -27,6 +38,7 @@ const FloatingCTA = ({ lang }) => {
         {/* Call Now Button */}
         <a
           href="tel:+919685232340"
+          aria-label={isHindi ? 'कॉल करें (+91 96852 32340)' : 'Call Now (+91 96852 32340)'}
           className="btn-sharplens relative flex-1 py-3 px-2 rounded-xl bg-gradient-to-r from-[#ff5e00] via-[#f97316] to-[#ea580c] text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-orange-500/35 border border-amber-300/40 active:scale-95 transition-all overflow-hidden"
           title="कॉल करें"
         >
@@ -43,6 +55,7 @@ const FloatingCTA = ({ lang }) => {
           href="https://wa.me/919685232340?text=नमस्ते%20विंध्याचल%20ट्रेवल्स,%20मुझे%20इंदौर%20से%20गाड़ी%20बुक%20करनी%20है।"
           target="_blank"
           rel="noreferrer"
+          aria-label="WhatsApp पर बात करें"
           className="btn-sharplens relative flex-1 py-3 px-2 rounded-xl bg-gradient-to-r from-[#25D366] via-[#22c55e] to-[#10b981] hover:brightness-105 text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/35 border border-green-200/50 active:scale-95 transition-all overflow-hidden"
           title="WhatsApp पर बात करें"
         >
@@ -53,8 +66,10 @@ const FloatingCTA = ({ lang }) => {
         </a>
       </div>
 
-      {/* 💻 2. Desktop Floating Widgets (Screen >= 768px) with Sharp Lens Effect & Sparkling Stars */}
-      <div className="hidden md:flex fixed bottom-6 left-6 z-40">
+      {/* 💻 2. Desktop Floating Widgets (Screen >= 768px) with Sharp Lens Effect & Sparkling Stars (Appears only after scrolling down) */}
+      <div className={`hidden md:flex fixed bottom-6 left-6 z-40 transition-all duration-500 ease-out ${
+        showDesktopCTA ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'
+      }`}>
         <a
           href="https://wa.me/919685232340?text=नमस्ते%20विंध्याचल%20ट्रेवल्स,%20मुझे%20कार%20किराया%20और%20टूर%20पैकेज%20की%20जानकारी%20चाहिए"
           target="_blank"
@@ -72,7 +87,9 @@ const FloatingCTA = ({ lang }) => {
         </a>
       </div>
 
-      <div className="hidden md:flex fixed bottom-6 right-6 z-40">
+      <div className={`hidden md:flex fixed bottom-6 right-6 z-40 transition-all duration-500 ease-out ${
+        showDesktopCTA ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'
+      }`}>
         <a
           href="tel:+919685232340"
           className="btn-sharplens group flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-[#ff5e00] via-[#f97316] to-[#ea580c] text-white font-extrabold text-sm uppercase tracking-wider shadow-2xl shadow-orange-500/40 hover:scale-105 transition-all duration-300 border-2 border-white/90"

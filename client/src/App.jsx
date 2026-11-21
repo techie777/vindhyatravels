@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Services from './components/Services';
 import Vehicles from './components/Vehicles';
 import Destinations from './components/Destinations';
 import WhyUs from './components/WhyUs';
@@ -10,14 +11,28 @@ import Footer from './components/Footer';
 import FloatingCTA from './components/FloatingCTA';
 import ScrollToTop from './components/ScrollToTop';
 import SplashScreen from './components/SplashScreen';
+import PoliciesModal from './components/PoliciesModal';
 
 // Admin Components
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 
 function App() {
-  // Splash screen state (shows once on initial load)
-  const [showSplash, setShowSplash] = useState(true);
+  // Splash screen state: Shown once per user session (clean white screen with centered logo & slogan)
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !sessionStorage.getItem('vt_splash_white_v3');
+  });
+
+  const handleSplashFinish = () => {
+    try {
+      sessionStorage.setItem('vt_splash_white_v3', 'true');
+    } catch (_) {}
+    setShowSplash(false);
+  };
+
+  // Policy Modal state (privacy | terms | cancellation)
+  const [policyModal, setPolicyModal] = useState({ isOpen: false, tab: 'privacy' });
 
   // Bilingual state: default selected on Hindi ('hi')
   const [lang, setLang] = useState('hi');
@@ -39,7 +54,7 @@ function App() {
       setIsAdminLoggedIn(true);
     }
 
-    // Check URL route slug: /admin or #admin
+    // Check URL route slug: /admin or #admin or policies hash
     const checkAdminRoute = () => {
       const isPathAdmin = window.location.pathname.toLowerCase().startsWith('/admin');
       const isHashAdmin = window.location.hash.toLowerCase() === '#admin';
@@ -55,6 +70,16 @@ function App() {
         }
       } else {
         setViewMode('user');
+      }
+
+      // Check for policy hash anchors (#privacy, #terms, #cancellation, #refund)
+      const currentHash = window.location.hash.toLowerCase();
+      if (currentHash === '#privacy') {
+        setPolicyModal({ isOpen: true, tab: 'privacy' });
+      } else if (currentHash === '#terms') {
+        setPolicyModal({ isOpen: true, tab: 'terms' });
+      } else if (currentHash === '#cancellation' || currentHash === '#refund') {
+        setPolicyModal({ isOpen: true, tab: 'cancellation' });
       }
     };
 
@@ -123,13 +148,14 @@ function App() {
       
       {/* 🌟 Divine Premium Welcome Splash Screen */}
       {showSplash && (
-        <SplashScreen onFinish={() => setShowSplash(false)} />
+        <SplashScreen onFinish={handleSplashFinish} />
       )}
 
       {/* 1. Header Navigation with Top Shree Ganeshay Namah Mantra Bar */}
       <Navbar
         lang={lang}
         setLang={setLang}
+        onOpenPolicy={(tab) => setPolicyModal({ isOpen: true, tab: tab || 'privacy' })}
       />
 
       {/* Main Traveler Landing Experience (Clean Flow Merged with Brand Colors & Full Data) */}
@@ -142,6 +168,9 @@ function App() {
         />
 
         {/* 3. Destinations Section (लोकप्रिय यात्राएँ - MP & India Packages) */}
+        <Services lang={lang} />
+
+        {/* 3. Destinations Section */}
         <Destinations
           lang={lang}
           currency={currency}
@@ -169,13 +198,28 @@ function App() {
       </main>
 
       {/* 9. Footer */}
-      <Footer lang={lang} />
+      <Footer
+        lang={lang}
+        onOpenPolicy={(tab) => setPolicyModal({ isOpen: true, tab: tab || 'privacy' })}
+      />
 
       {/* 10. Mobile Bottom Action Bar (📞 कॉल करें / 💬 WhatsApp) + Desktop Floating CTA */}
       <FloatingCTA lang={lang} />
 
       {/* 12. Floating Go to Top Button */}
       <ScrollToTop lang={lang} />
+
+      {/* 13. Policy Modal (Privacy Policy, Terms & Conditions, Cancellation & Refund) */}
+      <PoliciesModal
+        isOpen={policyModal.isOpen}
+        initialTab={policyModal.tab}
+        onClose={() => {
+          setPolicyModal({ isOpen: false, tab: 'privacy' });
+          if (window.location.hash.startsWith('#privacy') || window.location.hash.startsWith('#terms') || window.location.hash.startsWith('#cancellation') || window.location.hash.startsWith('#refund')) {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        }}
+      />
 
       {/* Admin Login Modal for /admin slug or route */}
       {showAdminLogin && (

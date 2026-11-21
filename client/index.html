@@ -49,13 +49,11 @@
     <!-- Resource Preconnects for Ultra-Fast Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
-    <!-- Google Fonts with font-display: swap for Instant Text Render -->
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Noto+Serif+Devanagari:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Optimized Google Fonts: Devanagari & Hindi Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&family=Noto+Serif+Devanagari:wght@700;900&display=swap" rel="stylesheet" />
 
     <!-- Structured Data Schema 1: LocalBusiness & TaxiService (Google Rich Snippets) -->
     <script type="application/ld+json">
@@ -148,18 +146,15 @@
     }
     </script>
 
-    <!-- Cache Cleanup script -->
+    <!-- Cache Cleanup script (Safe Non-blocking) -->
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (var reg of registrations) reg.unregister();
-        });
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (var name of names) caches.delete(name);
-        });
-      }
+      try {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (var reg of registrations) reg.unregister();
+          }).catch(function(){});
+        }
+      } catch (e) {}
     </script>
   </head>
   <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-orange-500 selection:text-white overflow-x-hidden">

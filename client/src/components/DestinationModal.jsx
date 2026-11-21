@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, Clock, MapPin, CheckCircle, ArrowRight, Sparkles, Phone, MessageCircle, ShieldCheck, Newspaper, Navigation, Video } from 'lucide-react';
 
 const DestinationModal = ({ destination, onClose, onSelectBooking, currency, lang }) => {
-  if (!destination) return null;
   const isHindi = lang === 'hi';
 
   // Handle escape key & lock body scroll so page doesn't scroll behind modal
@@ -13,48 +12,39 @@ const DestinationModal = ({ destination, onClose, onSelectBooking, currency, lan
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = originalOverflow;
+      document.body.style.overflow = '';
     };
   }, [onClose]);
+
+  if (!destination) return null;
 
   const modalContent = (
     <AnimatePresence>
       <div 
-        className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5 overflow-y-auto bg-slate-950/80 backdrop-blur-md"
+        className="fixed inset-0 z-[100000] flex items-center justify-center p-0 sm:p-4 overflow-hidden bg-slate-950/85 backdrop-blur-md"
         onClick={onClose}
       >
-        {/* Floating prominent close button on top-right (Always visible on top of everything) */}
-        <button
-          onClick={onClose}
-          type="button"
-          aria-label="Close dialogue"
-          className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[100000] w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/95 hover:bg-red-600 text-white flex items-center justify-center shadow-2xl border-2 border-white/40 backdrop-blur-md transition-all active:scale-95 group cursor-pointer"
-        >
-          <X className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-90 transition-transform" />
-        </button>
-
-        {/* Modal Window Container */}
+        {/* Modal Window Container (Full Screen on Mobile, Centered Card on Desktop) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ duration: 0.25 }}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl my-auto max-h-[88vh] sm:max-h-[90vh] flex flex-col text-left"
+          className="relative w-full h-[100dvh] sm:h-auto sm:max-h-[90vh] sm:max-w-2xl bg-white sm:rounded-3xl rounded-none sm:border sm:border-slate-200 shadow-2xl flex flex-col text-left overflow-hidden"
         >
-          {/* Card Top Right Inner Cross Button */}
+          {/* ONLY ONE Single Cross Button on Top Right */}
           <button
             onClick={onClose}
             type="button"
             aria-label="Close"
-            className="absolute top-3 right-3 z-30 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-red-600 text-white flex items-center justify-center shadow-lg border border-white/40 transition-colors cursor-pointer"
+            className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-red-600 text-white flex items-center justify-center shadow-xl border border-white/40 backdrop-blur-md transition-all active:scale-95 cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           {/* Modal Header Image */}

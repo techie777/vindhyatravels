@@ -12,6 +12,7 @@ import {
   LogOut, 
   ExternalLink, 
   ShieldCheck,
+  FileText,
   X
 } from 'lucide-react';
 
@@ -76,6 +77,13 @@ const AdminSidebar = ({
       icon: Settings, 
       badge: null,
       badgeColor: ''
+    },
+    { 
+      id: 'policies', 
+      label: 'Legal & Policies', 
+      icon: FileText, 
+      badge: 'Live',
+      badgeColor: 'bg-emerald-500 text-white'
     }
   ];
 

@@ -77,6 +77,8 @@ const FAQ = ({ lang }) => {
             >
               <button
                 onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}
+                aria-expanded={openIdx === idx}
+                aria-controls={`faq-answer-${idx}`}
                 className="w-full p-4 sm:p-5 sm:p-6 text-left flex items-center justify-between font-bold text-slate-900 hover:text-orange-600 transition-colors text-sm sm:text-base md:text-lg leading-snug cursor-pointer gap-3"
               >
                 <span className="pr-2">{item.q}</span>
@@ -88,7 +90,7 @@ const FAQ = ({ lang }) => {
               </button>
 
               {openIdx === idx && (
-                <div className="px-4 pb-5 sm:px-6 sm:pb-6 text-sm sm:text-base text-slate-700 leading-relaxed font-normal border-t border-slate-100 pt-3.5">
+                <div id={`faq-answer-${idx}`} className="px-4 pb-5 sm:px-6 sm:pb-6 text-sm sm:text-base text-slate-700 leading-relaxed font-normal border-t border-slate-100 pt-3.5">
                   {item.a}
                 </div>
               )}

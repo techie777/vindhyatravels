@@ -48,6 +48,14 @@
 }
 
 /* Custom Light Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -175,6 +183,7 @@
   animation: sharplens-sweep 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
   z-index: 5;
+  will-change: transform;
 }
 
 .btn-sharplens::before {
@@ -219,6 +228,7 @@
   animation: sharplens-sweep 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
   z-index: 5;
+  will-change: transform;
 }
 
 .logo-sharplens::before {
@@ -234,30 +244,26 @@
   z-index: 1;
 }
 
-/* Sparkling Stars Animations */
+/* Sparkling Stars Animations (100% GPU Compositor Accelerated, Zero Main-Thread Blocking) */
 @keyframes sparkle-twinkle {
   0%, 100% {
     opacity: 0.35;
-    transform: scale(0.7) rotate(0deg);
-    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));
+    transform: scale(0.75) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.25) rotate(45deg);
-    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1)) drop-shadow(0 0 10px rgba(255, 235, 120, 0.8));
+    transform: scale(1.2) rotate(45deg);
   }
 }
 
 @keyframes sparkle-twinkle-alt {
   0%, 100% {
     opacity: 1;
-    transform: scale(1.2) rotate(30deg);
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 8px rgba(255, 235, 120, 0.7));
+    transform: scale(1.15) rotate(30deg);
   }
   50% {
-    opacity: 0.3;
-    transform: scale(0.65) rotate(-25deg);
-    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.3));
+    opacity: 0.35;
+    transform: scale(0.7) rotate(-25deg);
   }
 }
 
@@ -265,14 +271,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  animation: sparkle-twinkle 1.6s ease-in-out infinite;
+  will-change: transform, opacity;
+  animation: sparkle-twinkle 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 .animate-sparkle-2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  animation: sparkle-twinkle-alt 2.1s ease-in-out infinite;
+  will-change: transform, opacity;
+  animation: sparkle-twinkle-alt 2.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* Mobile & Performance Optimization */

@@ -99,4 +99,11 @@ export const toggleApproveReview = (id, approved) =>
 export const deleteReview = (id) => 
   API.delete(`/reviews/${id}`);
 
+// Policy Endpoints (Privacy, Terms, Cancellation/Refund)
+export const fetchPolicies = () => 
+  API.get('/policies');
+
+export const updatePolicies = (data) => 
+  API.put('/policies', data);
+
 export default API;

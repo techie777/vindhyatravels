@@ -8,6 +8,7 @@ import EnquiryManager from './EnquiryManager';
 import ReviewManager from './ReviewManager';
 import HeroManager from './HeroManager';
 import WebSettingsManager from './WebSettingsManager';
+import PolicyManager from './PolicyManager';
 import { fetchDestinations, fetchAdminEnquiries, fetchAdminReviews, fetchVehicles } from '../../services/api';
 
 const AdminDashboard = ({ onExit, onLogout, currency }) => {
@@ -98,6 +99,7 @@ const AdminDashboard = ({ onExit, onLogout, currency }) => {
             {activeTab === 'reviews' && <ReviewManager />}
             {activeTab === 'hero' && <HeroManager />}
             {activeTab === 'settings' && <WebSettingsManager />}
+            {activeTab === 'policies' && <PolicyManager />}
           </div>
         </main>
       </div>

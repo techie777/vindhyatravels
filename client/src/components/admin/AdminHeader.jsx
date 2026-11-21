@@ -8,7 +8,8 @@ const TAB_TITLES = {
   enquiries: { title: 'Customer Leads & Enquiries', subtitle: 'Review and update lead pipeline, booking dates & contact details' },
   reviews: { title: 'Review Moderation', subtitle: 'Approve or reject testimonials submitted by travelers' },
   hero: { title: 'Hero Banner Settings', subtitle: 'Customize main hero title, subtitle and background images' },
-  settings: { title: 'Website Settings & Control', subtitle: 'Manage contact information, WhatsApp numbers & site parameters' }
+  settings: { title: 'Website Settings & Control', subtitle: 'Manage contact information, WhatsApp numbers & site parameters' },
+  policies: { title: 'Legal & Policies Manager', subtitle: 'Edit and publish Privacy Policy, Terms & Conditions, and Cancellation/Refund Policy' }
 };
 
 const AdminHeader = ({ 

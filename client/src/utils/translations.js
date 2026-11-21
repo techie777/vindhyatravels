@@ -1,7 +1,7 @@
 export const translations = {
   hi: {
     // Top Mantra Bar
-    ganeshaMantra: "॥ श्री गणेशाय नमः ॥ • शुभ यात्रा, सुखद अनुभूति",
+    ganeshaMantra: "🕉️ ॥ श्री गणेशाय नमः ॥ 🕉️ • शुभ यात्रा, सुखद अनुभूति",
 
     // Brand
     brandName: "विंध्याचल",
@@ -158,7 +158,7 @@ export const translations = {
   },
   en: {
     // Top Mantra Bar
-    ganeshaMantra: "|| Shree Ganeshay Namah || • Sacred Journeys, Joyful Memories",
+    ganeshaMantra: "🕉️ || Shree Ganeshay Namah || 🕉️ • Sacred Journeys, Joyful Memories",
 
     // Brand
     brandName: "Vindhyanchal",
